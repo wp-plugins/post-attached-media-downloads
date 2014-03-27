@@ -1,7 +1,7 @@
 <?php
 /**
  * Plugin Name: Post Attached Media Downloads
- * Plugin URI: http://wordpress.org/plugins/simple-customizer/
+ * Plugin URI: http://wordpress.org/plugins/post-attached-media-downloads/
  * Description: Attach various medias for direct access and referencing in your theme outside of the content area
  * Version: 1.0.0
  * Author: Clorith
