@@ -4,7 +4,7 @@ Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_i
 Tags: post, media, attachment, shortcode, download, link
 Requires at least: 3.0.0
 Tested up to: 3.8.1
-Stable tag: 1.0
+Stable tag: 1.0.1
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -68,10 +68,13 @@ Yes, the plugin uses post meta so it doesn't matter what setup you use
 
 == Changelog ==
 
+= 1.0.1 =
+Fix warning output showing on post pages if no files are added
+
 = 1.0.0 =
 Initial release
 
 == Upgrade Notice ==
 
-= 1.0.0 =
-Initial release
+= 1.0.1 =
+Fix warning notice in error logs when no files are added yet

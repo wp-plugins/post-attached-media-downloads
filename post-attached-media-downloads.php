@@ -3,7 +3,7 @@
  * Plugin Name: Post Attached Media Downloads
  * Plugin URI: http://wordpress.org/plugins/post-attached-media-downloads/
  * Description: Attach various medias for direct access and referencing in your theme outside of the content area
- * Version: 1.0.0
+ * Version: 1.0.1
  * Author: Clorith
  * Text Domain: post-attached-media-downloads
  * Author URI: http://www.clorith.net
@@ -322,6 +322,9 @@ class pamd {
 		 * Get the post meta containing our media
 		 */
 		$files = get_post_meta( $post->ID, '_pamd_files', true );
+		if ( empty( $files ) ) {
+			$files = array();
+		}
 
 		echo '
 			<input type="hidden" id="pamd-media-ids" name="pamd-media-ids" value="" />
