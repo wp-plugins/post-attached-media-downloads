@@ -2,8 +2,8 @@
 /**
  * Plugin Name: Post Attached Media Downloads
  * Plugin URI: http://wordpress.org/plugins/post-attached-media-downloads/
- * Description: Attach various medias for direct access and referencing in your theme outside of the content area
- * Version: 1.0.1
+ * Description: Create simple download lists for use in your posts or theme
+ * Version: 1.1
  * Author: Clorith
  * Text Domain: post-attached-media-downloads
  * Author URI: http://www.clorith.net
@@ -61,6 +61,8 @@ class pamd {
 		 */
 		add_action( 'wp_ajax_pamd_append_list', array( $this, 'ajax_update_list' ) );
 		add_action( 'wp_ajax_pamd_remove_entry', array( $this, 'ajax_remove_entry' ) );
+		add_action( 'wp_ajax_pamd_update_list_order', array( $this, 'ajax_update_list_order' ) );
+		add_action( 'wp_ajax_pamd_update_label', array( $this, 'ajax_update_label' ) );
 	}
 
 	/**
@@ -78,9 +80,113 @@ class pamd {
 	 * @since 1.0.0
 	 */
 	function admin_scripts() {
-		wp_register_script( 'pamd-editor', plugin_dir_url( __FILE__ ) . '/resources/js/editor.js', array( 'jquery' ), '1.0.0' );
+		wp_register_style( 'pamd-editor', plugin_dir_url( __FILE__ ) . '/resources/css/editor.css', array(), '1.0.1' );
+		wp_register_script( 'pamd-editor', plugin_dir_url( __FILE__ ) . '/resources/js/editor.js', array( 'jquery', 'jquery-ui-sortable' ), '1.0.1' );
 
+		/**
+		 * Add javascript localization
+		 */
+		$translations = array(
+			'edit_link'      => __( 'Edit label', 'post-attached-media-downloads' ),
+			'delete_link'    => __( 'Remove', 'post-attached-media-downloads' ),
+			'edit_help_text' => __( 'Enter the new download label below:', 'post-attached-media-downloads' )
+		);
+		wp_localize_script( 'pamd-editor', 'pamd', $translations );
+
+		wp_enqueue_style( 'pamd-editor' );
 		wp_enqueue_script( 'pamd-editor' );
+	}
+
+	/**
+	 * Ajax call handler used when updating a download label
+	 *
+	 * @return int|void
+	 */
+	function ajax_update_label() {
+		/**
+		 * Check if the user is allowed to edit the post in question
+		 */
+		if ( ! current_user_can( 'edit_post', $_POST['post_id'] ) ) { return -1; }
+
+		/**
+		 * Fetch the post meta holding our download list
+		 */
+		$media = get_post_meta( $_POST['post_id'], '_pamd_files', true );
+		if ( empty( $media ) ) {
+			/**
+			 * If the meta is empty, we set our variable as an array
+			 */
+			$media = array();
+		}
+
+		if ( isset( $media[$_POST['pamd_id']] ) ) {
+			$media[$_POST['pamd_id']]['label'] = $_POST['new_label'];
+		}
+
+		/**
+		 * Update the post meta with the relabeled media entry
+		 */
+		update_post_meta( $_POST['post_id'], '_pamd_files', $media );
+
+		die();
+	}
+
+	/**
+	 * Ajax call handler used to receive the new order of downloads after drag and drop events
+	 *
+	 * @since 1.1.0
+	 *
+	 * return int|void
+	 */
+	function ajax_update_list_order() {
+		/**
+		 * Check if the user is allowed to edit the post in question
+		 */
+		if ( ! current_user_can( 'edit_post', $_POST['post_id'] ) ) { return -1; }
+
+		/**
+		 * Fetch the post meta holding our download list
+		 */
+		$media = get_post_meta( $_POST['post_id'], '_pamd_files', true );
+		if ( empty( $media ) ) {
+			/**
+			 * If the meta is empty, we set our variable as an array
+			 */
+			$media = array();
+		}
+
+		/**
+		 * Prepare the array for our new ordered list
+		 */
+		$new_media = array();
+
+		/**
+		 * Explode the list, we sent a comma separated list via JS
+		 */
+		$new_order = explode( ",", $_POST['pamd_ids'] );
+
+		/**
+		 * Loop over the new order and set the new media array accordingly
+		 */
+		foreach( $new_order AS $onum ) {
+			/**
+			 * Skip any non-existent entries (could happen if multiple users are editing at once)
+			 */
+			if ( isset( $media[$onum] ) ) {
+				$new_media[] = $media[$onum];
+			}
+		}
+
+		/**
+		 * Update the post meta with the new media list
+		 */
+		update_post_meta( $_POST['post_id'], '_pamd_files', $new_media );
+
+		/**
+		 * Output a JSON encoded string of the media downloads returned to our ajax call
+		 */
+		echo json_encode( $new_media );
+		die();
 	}
 
 	/**
@@ -354,12 +460,15 @@ class pamd {
 		/**
 		 * Loop over every media element in our meta
 		 */
-		foreach( $files AS $count => $media ) {
+		foreach( $files AS $enum => $media ) {
 			echo '
-				<tr class="' . ( $odd ? 'alternate' : '' ) . '">
+				<tr data-pamd-entry-num="' . $enum . '" class="' . ( $odd ? 'alternate' : '' ) . '">
 					<td data-pamd-media-id="' . $media['id'] . '">' . $media['label'] . '</td>
 					<td><a href="' . $media['url'] . '">' . $media['url'] . '</a></td>
-					<td><a href="#" class="pamd-delete" data-pamd-remove="' . $count . '">Remove</a></td>
+					<td>
+						<a href="#" class="pamd-edit">' . __( 'Edit label', 'post-attached-media-downloads' ) . '</a>
+						 | <a href="#" class="pamd-delete" data-pamd-remove="' . $enum . '">' . __( 'Remove', 'post-attached-media-downloads' ) . '</a>
+					</td>
 				</tr>
 			';
 

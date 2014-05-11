@@ -3,8 +3,8 @@ Contributors: Clorith
 Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=8VLNZ3434PBZQ
 Tags: post, media, attachment, shortcode, download, link
 Requires at least: 3.0.0
-Tested up to: 3.8.1
-Stable tag: 1.0.1
+Tested up to: 3.9.1
+Stable tag: 1.1
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -22,7 +22,7 @@ Add media to posts and pages (even Custom Post Types!) to quickly and easily gen
 * Advanced users may call functions directly in their themes to implement download areas outside the post content
 
 = Advanced use =
-If you wish to make use of media downloads in your theme, you can call the `get_downloads()` function directly in the followign way;
+If you wish to make use of media downloads in your theme, you can call the `get_downloads()` function directly in the following way;
 
 `$pamd->get_downloads( $postID, $echo, $return_format )`
 
@@ -68,13 +68,17 @@ Yes, the plugin uses post meta so it doesn't matter what setup you use
 
 == Changelog ==
 
+= 1.1 =
+* Tested with WordPress 3.9
+* Re-ordering download lists by drag and drop
+* Ability to edit download labels
+
 = 1.0.1 =
-Fix warning output showing on post pages if no files are added
+* Fix warning output showing on post pages if no files are added
 
 = 1.0.0 =
-Initial release
+* Initial release
 
 == Upgrade Notice ==
 
-= 1.0.1 =
-Fix warning notice in error logs when no files are added yet
+Added support for drag and drop re-ordering and label editing.
