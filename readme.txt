@@ -3,8 +3,8 @@ Contributors: Clorith
 Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=8VLNZ3434PBZQ
 Tags: post, media, attachment, shortcode, download, link
 Requires at least: 3.0.0
-Tested up to: 3.9.1
-Stable tag: 1.1
+Tested up to: 4.0
+Stable tag: 1.2
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -24,7 +24,7 @@ Add media to posts and pages (even Custom Post Types!) to quickly and easily gen
 = Advanced use =
 If you wish to make use of media downloads in your theme, you can call the `get_downloads()` function directly in the following way;
 
-`$pamd->get_downloads( $postID, $echo, $return_format )`
+`$pamd->get_downloads( $postID, $echo, $return_format, $target )`
 
 All parameters are optional, but control the following;
 
@@ -48,6 +48,11 @@ What format should the list be returned in, the default is an unordered list
 * `pamd` (default) returns an unordered list with the media
 
 
+**$target** *string*
+
+This attribute is only used if you are returning a table or the default behavior is left, and will determine the target attribute of the link
+
+
 == Installation ==
 
 1. Upload the `post-attached-media-downloads` folder to the `/wp-content/plugins/` directory
@@ -68,6 +73,11 @@ Yes, the plugin uses post meta so it doesn't matter what setup you use
 
 == Changelog ==
 
+= 1.2 =
+* Added context button to the editor
+* Added support for changing link targets
+* Tested with the upcoming WordPress 4.0
+
 = 1.1 =
 * Tested with WordPress 3.9
 * Re-ordering download lists by drag and drop
@@ -81,4 +91,4 @@ Yes, the plugin uses post meta so it doesn't matter what setup you use
 
 == Upgrade Notice ==
 
-Added support for drag and drop re-ordering and label editing.
+Support for link targets and a more user friendly context button for the main editor.
