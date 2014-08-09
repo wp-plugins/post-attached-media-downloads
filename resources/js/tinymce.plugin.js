@@ -1,23 +1,23 @@
 (function() {
 	tinymce.PluginManager.add( 'pamd_mce_button', function( editor, url ) {
 		editor.addButton( 'pamd_mce_button', {
-			tooltip : 'Post Attached Media Downloads',
+			tooltip : editor.getLang( 'pamd.plugin' ),
 			icon    : 'pamd-icon',
 			onclick : function() {
 				editor.windowManager.open( {
-					title : 'Post Attached Media Downloads',
+					title : editor.getLang( 'pamd.plugin' ),
 					body  : [
 						{
 							type   : 'listbox',
 							name   : 'pamdLinkTarget',
-							label  : 'Download behavior',
+							label  : editor.getLang( 'pamd.linktarget' ),
 							values : [
 								{
-									text  : 'Open in current window',
+									text  : editor.getLang( 'pamd.linktargetself' ),
 									value : '_self'
 								},
 								{
-									text  : 'Open a new tab/window',
+									text  : editor.getLang( 'pamd.linktargetblank' ),
 									value : '_blank'
 								}
 							]
