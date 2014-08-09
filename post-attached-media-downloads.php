@@ -3,7 +3,7 @@
  * Plugin Name: Post Attached Media Downloads
  * Plugin URI: http://wordpress.org/plugins/post-attached-media-downloads/
  * Description: Create simple download lists for use in your posts or theme
- * Version: 1.1
+ * Version: 1.2
  * Author: Clorith
  * Text Domain: post-attached-media-downloads
  * Author URI: http://www.clorith.net
@@ -43,6 +43,11 @@ class pamd {
 		 * Shortcode hook
 		 */
 		add_shortcode( 'pamd', array( $this, 'get_downloads' ) );
+
+		/**
+		 * TinyMCE hooks
+		 */
+		add_action( 'admin_head', array( $this, 'pamd_tinymce' ) );
 
 		/**
 		 * JavaScript and enqueue hooks
@@ -95,6 +100,28 @@ class pamd {
 
 		wp_enqueue_style( 'pamd-editor' );
 		wp_enqueue_script( 'pamd-editor' );
+	}
+
+	function pamd_tinymce() {
+		if ( ! current_user_can( 'edit_posts' ) && ! current_user_can( 'edit_pages' ) ) {
+			return;
+		}
+		if ( 'true' == get_user_option( 'rich_editing' ) ) {
+			add_filter( 'mce_external_plugins', array( $this, 'pamd_add_tinymce_plugin' ) );
+			add_filter( 'mce_buttons', array( $this, 'pamd_register_mce_button' ) );
+		}
+	}
+
+	function pamd_add_tinymce_plugin( $plugins ) {
+		$plugins['pamd_mce_button'] = plugin_dir_url( __FILE__ ) . '/resources/js/tinymce.plugin.js';
+
+		return $plugins;
+	}
+
+	function pamd_register_mce_button( $buttons ) {
+		array_push( $buttons, 'pamd_mce_button' );
+
+		return $buttons;
 	}
 
 	/**
