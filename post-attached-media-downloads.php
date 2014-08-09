@@ -42,7 +42,7 @@ class pamd {
 		/**
 		 * Shortcode hook
 		 */
-		add_shortcode( 'pamd', array( $this, 'get_downloads' ) );
+		add_shortcode( 'pamd', array( $this, 'pamd_shortcode' ) );
 
 		/**
 		 * TinyMCE hooks
@@ -102,22 +102,49 @@ class pamd {
 		wp_enqueue_script( 'pamd-editor' );
 	}
 
+	/**
+	 * Include buttons for the TinyMCE editor if the user has the appropriate capabilities
+	 *
+	 * @since 1.2
+	 */
 	function pamd_tinymce() {
 		if ( ! current_user_can( 'edit_posts' ) && ! current_user_can( 'edit_pages' ) ) {
 			return;
 		}
+
+		/**
+		 *
+		 */
 		if ( 'true' == get_user_option( 'rich_editing' ) ) {
 			add_filter( 'mce_external_plugins', array( $this, 'pamd_add_tinymce_plugin' ) );
 			add_filter( 'mce_buttons', array( $this, 'pamd_register_mce_button' ) );
 		}
 	}
 
+	/**
+	 * Filter for queuing our TinyMCE plugin code through core
+	 *
+	 * @param array $plugins
+	 *
+	 * @since 1.2
+	 *
+	 * @return array
+	 */
 	function pamd_add_tinymce_plugin( $plugins ) {
 		$plugins['pamd_mce_button'] = plugin_dir_url( __FILE__ ) . '/resources/js/tinymce.plugin.js';
 
 		return $plugins;
 	}
 
+	/**
+	 * Filter used to include our button with the rest of the TinyMCE buttons
+	 *
+	 * @param array $buttons
+	 *
+	 * @since 1.2
+	 *
+	 * @return array
+	 */
 	function pamd_register_mce_button( $buttons ) {
 		array_push( $buttons, 'pamd_mce_button' );
 
@@ -327,17 +354,35 @@ class pamd {
 	}
 
 	/**
+	 * Function for displaying shortcode content
+	 *
+	 * @param $atts
+	 *
+	 * @since 1.2
+	 *
+	 * @return mixed
+	 */
+	function pamd_shortcode( $atts ) {
+		$atts = shortcode_atts( array(
+			'target' => '_self'
+		), $atts );
+
+		return $this->get_downloads( '', false, 'pamd', $atts['target'] );
+	}
+
+	/**
 	 * Get a list of downloadable media for a post
 	 *
 	 * @param int $postid The post id we want to get a PAMD list for
 	 * @param bool $echo Should the list be returned or echoed directly
 	 * @param string $return_format What format should the content be returned in
+	 * @param string $target The download target to be output if we build the links
 	 *
 	 * @since 1.0.0
 	 *
 	 * @return mixed
 	 */
-	function get_downloads( $postid = 0, $echo = false, $return_format = 'pamd' ) {
+	function get_downloads( $postid = 0, $echo = false, $return_format = 'pamd', $target = '_self' ) {
 		/**
 		 * If no post id is provided, we get the current one from The Loop
 		 */
@@ -381,7 +426,7 @@ class pamd {
 					<tr>
 						<td>' . $entry['label'] . '</td>
 						<td>
-							<a href="' . $entry['url'] . '">
+							<a href="' . $entry['url'] . '" target="' . $target . '">
 								' . $entry['url'] . '
 							</a>
 						</td>
@@ -405,7 +450,7 @@ class pamd {
 			foreach( $entries AS $entry ) {
 				$pam .= '
 					<li>
-						<a href="' . $entry['url'] . '">
+						<a href="' . $entry['url'] . '" target="' . $target . '">
 							' . $entry['label'] . '
 						</a>
 					</li>
