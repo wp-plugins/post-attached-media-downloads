@@ -2,9 +2,9 @@
 Contributors: Clorith
 Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=8VLNZ3434PBZQ
 Tags: post, media, attachment, shortcode, download, link
-Requires at least: 3.0.0
+Requires at least: 3.9.0
 Tested up to: 4.0
-Stable tag: 1.2
+Stable tag: 1.2.1
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -26,7 +26,7 @@ If you wish to make use of media downloads in your theme, you can call the `get_
 
 `$pamd->get_downloads( $postID, $echo, $return_format, $target )`
 
-All parameters are optional, but control the following;
+All parameters are optional, and if no downloads are found the function will return false. The parameters control the following;
 
 
 **$postID** *integer*
@@ -73,6 +73,10 @@ Yes, the plugin uses post meta so it doesn't matter what setup you use
 
 == Changelog ==
 
+= 1.2.1 =
+* Updated the minimum requirement to WordPress 3.9 with the introduction of context buttons for the editor
+* Modified the behavior of the `get_downloads` function to return `false` if no downloads are found
+
 = 1.2 =
 * Added context button to the editor
 * Added support for changing link targets
@@ -91,4 +95,4 @@ Yes, the plugin uses post meta so it doesn't matter what setup you use
 
 == Upgrade Notice ==
 
-Support for link targets and a more user friendly context button for the main editor.
+Fix for posts using the plugin shortcode without any available downloads

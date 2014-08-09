@@ -398,7 +398,15 @@ class pamd {
 		$entries = get_post_meta( $postid, '_pamd_files', true );
 
 		/**
-		 * Output the data i nthe requested manner
+		 * If the $entries variable does not contain any array it is safe to presume
+		 * there are no downloads for this post, and we return false
+		 */
+		if ( ! is_array( $entries ) ) {
+			return false;
+		}
+
+		/**
+		 * Output the data in the requested manner
 		 */
 		if ( $return_format == 'array' ) {
 			/**
