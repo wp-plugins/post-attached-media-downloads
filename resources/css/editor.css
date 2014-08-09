@@ -1,0 +1,6 @@
+#pamd-media-list-body tr {
+	cursor: move;
+}
+i.mce-i-pamd-icon {
+	background-image: url( '../images/download.png' );
+}
