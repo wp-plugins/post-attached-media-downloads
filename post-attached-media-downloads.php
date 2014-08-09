@@ -3,7 +3,7 @@
  * Plugin Name: Post Attached Media Downloads
  * Plugin URI: http://wordpress.org/plugins/post-attached-media-downloads/
  * Description: Create simple download lists for use in your posts or theme
- * Version: 1.2
+ * Version: 1.2.1
  * Author: Clorith
  * Text Domain: post-attached-media-downloads
  * Author URI: http://www.clorith.net
